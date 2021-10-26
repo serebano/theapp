@@ -1,14 +1,36 @@
-import { getPage } from 'vite-plugin-ssr/client'
 import { createApp } from './app'
+import { getPageTitle } from './getPageTitle'
+import { useClientRouter } from 'vite-plugin-ssr/client/router'
 import type { PageContext } from './types'
 import type { PageContextBuiltInClient } from 'vite-plugin-ssr/types'
+import 'virtual:windi.css'
 
-hydrate()
+let app: ReturnType<typeof createApp>
+const { hydrationPromise } = useClientRouter({
+  render(pageContext: PageContextBuiltInClient & PageContext) {
+    if (!app) {
+      app = createApp(pageContext)
+      app.mount('#app')
+    } else {
+      app.changePage(pageContext)
+    }
+    document.title = getPageTitle(pageContext)
+  },
+  // Vue needs the first render to be a hydration
+  ensureHydration: true,
+  onTransitionStart,
+  onTransitionEnd
+})
 
-async function hydrate() {
-  // We do Server Routing, but we can also do Client Routing by using `useClientRouter()`
-  // instead of `getPage()`, see https://vite-plugin-ssr.com/useClientRouter
-  const pageContext = await getPage<PageContextBuiltInClient & PageContext>()
-  const app = createApp(pageContext)
-  app.mount('#app')
+hydrationPromise.then(() => {
+  console.log('Hydration finished; page is now interactive.')
+})
+
+function onTransitionStart() {
+  console.log('Page transition start')
+  document.querySelector('.content')!.classList.add('page-transition')
+}
+function onTransitionEnd() {
+  console.log('Page transition end')
+  document.querySelector('.content')!.classList.remove('page-transition')
 }

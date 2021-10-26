@@ -1,10 +1,14 @@
-export type PageProps = {}
+export type Component = any
 // The `pageContext` that are available in both on the server-side and browser-side
 export type PageContext = {
-  Page: any
-  pageProps?: PageProps
+  Page: Component
+  pageProps: Record<string, unknown>
+  pageExports: {
+    documentProps?: {
+      title: string
+    }
+  }
   documentProps?: {
-    title?: string
-    description?: string
+    title: string
   }
 }

@@ -6,6 +6,7 @@
       </a>
       <Link href="/">Home</Link>
       <Link href="/about">About</Link>
+      <Link href="/markdown">Markdown</Link>
     </div>
     <div class="content"><slot /></div>
   </div>
@@ -36,7 +37,7 @@ a {
 }
 .content {
   padding: 20px;
-  border-left: 2px solid #eee;
+  border-left: 1px solid #ccc;
   padding-bottom: 50px;
   min-height: 100vh;
 }
@@ -45,7 +46,7 @@ a {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: stretch;
   line-height: 1.8em;
 }
 .logo {
